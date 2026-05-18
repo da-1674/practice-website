@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>캐릭터 좌우 이동 테스트</title>
+    <style>
+        /* 전체 화면 설정 */
+        body {
+            font-family: 'Malgun Gothic', sans-serif;
+            background-color: #2b2b2b;
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            overflow-x: hidden; /* 가로 스크롤 방지 */
+        }
+
+        /* 컨트롤 패널 (이름 설정 부분) */
+        #control-panel {
+            margin-bottom: 20px;
+        }
+
+        input {
+            padding: 8px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+        }
+
+        button {
+            padding: 8px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        button:hover { background-color: #45a049; }
+
+        /* 게임 무대 설정 */
+        #stage {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            background-color: #444;
+            border-top: 3px solid #666;
+            border-bottom: 3px solid #666;
+            margin-top: 20px;
+        }
+
+        /* 플레이어 (네모 캐릭터) 설정 */
+        #player {
+            position: absolute;
+            bottom: 0; /* 바닥에 붙임 */
+            left: 50%; /* 초기 위치 중앙 */
+            width: 60px;
+            height: 60px;
+            background-color: #00d2ff;
+            border: 2px solid #fff;
+            
+            /* 텍스트(이름) 중앙 정렬 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: black;
+            font-weight: bold;
+            font-size: 14px;
+            
+            /* 부드러운 움직임을 위한 애니메이션 효과 */
+            transition: left 0.05s ease-out;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🎮 이동 테스트룸</h1>
+    
+    <div id="control-panel">
+        <input type="text" id="nameInput" placeholder="캐릭터 이름 입력">
+        <button onclick="setName()">이름 설정</button>
+        <p>키보드 <strong>[ ◀ 왼쪽 ]</strong> 과 <strong>[ 오른쪽 ▶ ]</strong> 방향키를 눌러보세요!</p>
+    </div>
+
+    <div id="stage">
+        <div id="player">네모</div>
+    </div>
+
+    <script>
+        // HTML에 있는 요소들을 자바스크립트로 불러오기
+        const player = document.getElementById('player');
+        
+        // 캐릭터의 현재 X 좌표 (화면 중앙쯤으로 시작)
+        let playerX = window.innerWidth / 2;
+        
+        // 한 번 누를 때 이동할 거리 (속도)
+        const moveSpeed = 30; 
+
+        // 1. 이름 설정 기능
+        function setName() {
+            const inputName = document.getElementById('nameInput').value;
+            if (inputName.trim() !== "") {
+                player.innerText = inputName; // 네모 안의 글자를 입력한 이름으로 바꿈
+            } else {
+                alert("이름을 입력해주세요!");
+            }
+        }
+
+        // 2. 키보드 입력 감지 및 이동 기능
+        window.addEventListener('keydown', function(event) {
+            // 왼쪽 화살표 키를 눌렀을 때
+            if (event.key === 'ArrowLeft') {
+                playerX -= moveSpeed; 
+            }
+            // 오른쪽 화살표 키를 눌렀을 때
+            else if (event.key === 'ArrowRight') {
+                playerX += moveSpeed;
+            }
+
+            // 화면 밖으로 나가지 못하게 막기
+            if (playerX < 0) {
+                playerX = 0;
+            } else if (playerX > window.innerWidth - 60) { // 60은 캐릭터 가로 넓이
+                playerX = window.innerWidth - 60;
+            }
+
+            // 계산된 새 위치를 캐릭터에 적용
+            player.style.left = playerX + 'px';
+        });
+    </script>
+
+</body>
+</html>
